@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.log
+
+# Django
+*.pot
+*.pyc
+*.pyo
+*.db
+*.mo
+
+# macOS
+.DS_Store
+
+# Virtual Environments
+venv*/
+ENV/
+env/
+.venv/
+
+# Secrets
+.env
+
+# VSCode（使っていれば）
+.vscode/
