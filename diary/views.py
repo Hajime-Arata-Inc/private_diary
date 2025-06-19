@@ -3,6 +3,15 @@ from django.views.generic.edit import CreateView
 from django.views.generic import ListView
 from django.urls import reverse_lazy
 from .models import Diary
+from django.views.generic import ListView
+
+class DiaryListView(ListView):
+    model = Diary
+    template_name = 'diary/diary_list.html'  # このテンプレートを後で作成します
+    context_object_name = 'diary_list'       # テンプレートで使う変数名
+    ordering = ['-created_at']               # 日付の新しい順で表示
+
+
 
 class DiaryCreateView(CreateView):
     model = Diary
