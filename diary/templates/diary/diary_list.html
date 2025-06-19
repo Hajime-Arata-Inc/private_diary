@@ -13,5 +13,12 @@
             <li>日記はまだありません。</li>
         {% endfor %}
     </ul>
+    {% if request.user.is_authenticated %}
+  <p>こんにちは、{{ request.user.username }} さん</p>
+  <p><a href="/admin/logout/">ログアウト</a></p>
+{% else %}
+  <p><a href="/admin/login/">ログイン</a></p>
+{% endif %}
+
 </body>
 </html>

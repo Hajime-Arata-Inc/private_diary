@@ -24,9 +24,10 @@ DATABASES = {
 }
 
 
-LOGIN_URL = '/admin/login/'
 
 
+# ログイン後のリダイレクト先を設定
+LOGOUT_REDIRECT_URL = '/'
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -54,7 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-     'diary',  # 追加
+    'diary',  # 追加
 ]
 
 MIDDLEWARE = [
@@ -165,3 +166,6 @@ TEMPLATES = [
         },
     },
 ]
+
+
+
