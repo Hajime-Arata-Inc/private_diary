@@ -25,9 +25,10 @@ DATABASES = {
 
 
 
+LOGIN_URL = '/login/'  # ← 管理画面ではなく自作ログインを使用
 
 # ログイン後のリダイレクト先を設定
-LOGOUT_REDIRECT_URL = '/'
+#LOGOUT_REDIRECT_URL = '/'
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -121,12 +122,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ja'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
 
 

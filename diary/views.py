@@ -4,6 +4,7 @@ from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from .models import Diary
 from django.views.generic import ListView
+from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView
 
 
@@ -19,7 +20,11 @@ class DiaryListView(LoginRequiredMixin, ListView):
     context_object_name = 'diary_list'       # テンプレートで使う変数名
     ordering = ['-created_at']               # 日付の新しい順で表示
 
+class UserLoginView(LoginView):
+    template_name = 'diary/login.html'
 
+class UserLogoutView(LogoutView):
+    template_name = 'diary/logged_out.html'  # ログアウト後に表示するテンプレート
 
 
 

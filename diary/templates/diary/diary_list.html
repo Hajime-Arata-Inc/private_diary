@@ -1,24 +1,14 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>日記一覧</title>
-</head>
-<body>
-    <h1>日記一覧</h1>
-    <ul>
-        {% for diary in object_list %}
-            <li>{{ diary.title }} - {{ diary.created_at }}</li>
-        {% empty %}
-            <li>日記はまだありません。</li>
-        {% endfor %}
-    </ul>
-    {% if request.user.is_authenticated %}
-  <p>こんにちは、{{ request.user.username }} さん</p>
-  <p><a href="/admin/logout/">ログアウト</a></p>
-{% else %}
-  <p><a href="/admin/login/">ログイン</a></p>
-{% endif %}
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}日記一覧{% endblock %}
+
+{% block content %}
+  <h2>日記一覧</h2>
+  <ul>
+    {% for diary in object_list %}
+        <li>{{ diary.title }} - {{ diary.created_at }}</li>
+    {% empty %}
+        <li>日記はまだありません。</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

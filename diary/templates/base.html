@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}日記アプリ{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <h1>日記アプリ</h1>
+
+        {% if request.user.is_authenticated %}
+            <p>こんにちは、{{ request.user.username }} さん</p>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">ログアウト</button>
+            </form>
+        {% else %}
+            <p><a href="{% url 'login' %}">ログイン</a></p>
+        {% endif %}
+
+        <hr>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

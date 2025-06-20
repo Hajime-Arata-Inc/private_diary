@@ -1,10 +1,13 @@
 # diary/urls.py
 from django.urls import path
 from .views import DiaryListView, DiaryCreateView
-from django.contrib.auth.views import LogoutView
+from .views import UserLoginView  # ✅ ここが必要！
+from .views import UserLogoutView  # ✅ 自作ビューを読み込む
+
 
 urlpatterns = [
+    path('login/', UserLoginView.as_view(), name='login'),
+    path('logout/', UserLogoutView.as_view(), name='logout'),
     path('', DiaryListView.as_view(), name='diary_list'),
     path('create/', DiaryCreateView.as_view(), name='diary_create'),
-    path('logout/', LogoutView.as_view(template_name='diary/logged_out.html'), name='logout'),  # ← ここが LogoutView の設定
 ]
