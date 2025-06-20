@@ -9,4 +9,4 @@
   - ログアウト処理はセキュリティ対策として POST メソッドで実装
   - ログイン画面： `/login/`、ログアウト画面： `/logout/`（logged_out.html）
 
-※詳細な経緯は [Issue #1](リンク) を参照
+※詳細な経緯は [Issue #1](https://github.com/Hajime-Arata-Inc/private_diary/issues/1#issue-3160573850) を参照
