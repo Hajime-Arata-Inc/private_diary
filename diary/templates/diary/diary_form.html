@@ -1,38 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>日記投稿</title>
-</head>
-<body>
-  <h1>日記を投稿する</h1>
+{% extends "base.html" %}
+{% load form_filters %}
 
-  <!-- エラーがあるときに表示 -->
-  {% if form.errors %}
-    <ul style="color: red;">
-      {% for field in form %}
-        {% for error in field.errors %}
-          <li>{{ field.label }}：{{ error }}</li>
-        {% endfor %}
-      {% endfor %}
-    </ul>
-  {% endif %}
+{% block content %}
+  <h2>日記の投稿</h2>
 
   <form method="post">
     {% csrf_token %}
 
-    <p>
-      <label for="id_title">タイトル（必須）：</label><br>
-      {{ form.title }}
-    </p>
+    {% for field in form %}
+        <div class="mb-3">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field|add_class:"form-control" }}
+        {% if field.help_text %}
+          <div class="form-text">{{ field.help_text }}</div>
+        {% endif %}
+        {% for error in field.errors %}
+          <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+      </div>
+    {% endfor %}
 
-    <p>
-      <label for="id_content">本文（必須）：</label><br>
-      {{ form.content }}
-    </p>
-
-    <button type="submit">投稿</button>
+    <button type="submit" class="btn btn-success">投稿する</button>
   </form>
-
-  <p><a href="{% url 'diary_list' %}">← 一覧に戻る</a></p>
-</body>
-</html>
+{% endblock %}

@@ -29,6 +29,7 @@ LOGIN_URL = '/login/'  # ← 管理画面ではなく自作ログインを使用
 
 # ログイン後のリダイレクト先を設定
 #LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'diary_list'
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

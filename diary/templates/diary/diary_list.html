@@ -1,14 +1,29 @@
-{% extends 'base.html' %}
-
-{% block title %}日記一覧{% endblock %}
+{% extends "base.html" %}
 
 {% block content %}
-  <h2>日記一覧</h2>
-  <ul>
-    {% for diary in object_list %}
-        <li>{{ diary.title }} - {{ diary.created_at }}</li>
-    {% empty %}
-        <li>日記はまだありません。</li>
-    {% endfor %}
-  </ul>
+  <h2 class="mb-4">日記一覧</h2>
+
+  {% if object_list %}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      {% for diary in object_list %}
+        <div class="col">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ diary.title }}</h5>
+              <p class="card-text text-muted">
+                {{ diary.created_at|date:"Y年m月d日 H:i" }}
+              </p>
+              <p class="card-text">{{ diary.content|truncatechars:120 }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">まだ日記が投稿されていません。</div>
+  {% endif %}
+
+  <div class="mt-4 text-end">
+    <a href="{% url 'diary_create' %}" class="btn btn-success">＋ 日記を投稿する</a>
+  </div>
 {% endblock %}
