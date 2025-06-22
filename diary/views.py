@@ -6,12 +6,30 @@ from .models import Diary
 from django.views.generic import ListView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView
+from django.db.models import Count
+from django.db.models.functions import TruncDate
+
 
 class DiaryListView(LoginRequiredMixin, ListView):
     model = Diary
-    template_name = 'diary/diary_list.html'  # このテンプレートを後で作成します
-    context_object_name = 'diary_list'       # テンプレートで使う変数名
-    ordering = ['-created_at']               # 日付の新しい順で表示
+    template_name = 'diary/diary_list.html'
+    context_object_name = 'diary_list'
+    ordering = ['-created_at']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['diary_count'] = Diary.objects.count()
+
+        # 🔽 日別件数を集計（TruncDateで日付単位に切り落とし）
+        context['daily_counts'] = (
+            Diary.objects
+            .annotate(date=TruncDate('created_at'))
+            .values('date')
+            .annotate(count=Count('id'))
+            .order_by('-date')
+        )
+
+        return context
 
 
 class DiaryCreateView(LoginRequiredMixin, CreateView):  # ← Mixinを追加　順番が重要
