@@ -65,5 +65,8 @@
   });
 </script>
 
+{% if user.is_staff %}
+            <a href="{% url 'stats' %}">分析ページへ</a>
+{% endif %}
 
 {% endblock %}

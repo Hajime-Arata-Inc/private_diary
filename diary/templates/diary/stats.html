@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load form_filters %}
+
+{% block content %}
+    <h2 class="mb-4">📈 分析ページ</h2>
+
+    <p class="text-muted">現在の総投稿数：<strong>{{ diary_count }}</strong> 件</p>
+
+    <h3 class="mt-4">日別投稿数（リスト）</h3>
+    <ul class="list-group mb-5">
+    {% for item in daily_counts %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{ item.date|date:"Y年m月d日" }}
+        <span class="badge bg-primary rounded-pill">{{ item.count }} 件</span>
+        </li>
+    {% empty %}
+        <li class="list-group-item">データがありません。</li>
+    {% endfor %}
+    </ul>
+
+    <h3>📊 日別投稿グラフ</h3>
+    <canvas id="diaryChart" width="400" height="200"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    const ctx = document.getElementById('diaryChart');
+    const diaryChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+        labels: [
+            {% for item in daily_counts %}
+            "{{ item.date|date:'Y-m-d' }}"{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ],
+        datasets: [{
+            label: '投稿数',
+            data: [
+            {% for item in daily_counts %}
+                {{ item.count }}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+            ],
+            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+        },
+        options: {
+        scales: {
+            y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1 }
+            }
+        }
+        }
+    });
+    </script>
+{% endblock %}

@@ -35,6 +35,11 @@
         {% block content %}
         {% endblock %}
 
+        {% if user.is_staff %}
+            <a href="{% url 'stats' %}">分析ページへ</a>
+        {% endif %}
+
+
          <!-- ✅ Bootstrap JS（必要に応じて） -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
     integrity="sha384-ZENPa/dsSvs0Jq6zCyKpt5pGz5fjJE0yVO9WqN5JbxIo0Fo2lDwVxgxZgCkBZp3g"

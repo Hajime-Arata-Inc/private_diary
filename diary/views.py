@@ -8,7 +8,30 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView
 from django.db.models import Count
 from django.db.models.functions import TruncDate
+from django.views.generic import TemplateView
+from django.contrib.auth.mixins import UserPassesTestMixin
 
+class StatsView(LoginRequiredMixin, TemplateView, UserPassesTestMixin):
+    template_name = 'diary/stats.html'
+
+    def get_context_data(self, **kwargs):
+        from django.db.models.functions import TruncDate
+        from django.db.models import Count
+        context = super().get_context_data(**kwargs)
+
+        context['diary_count'] = Diary.objects.count()
+
+        context['daily_counts'] = (
+            Diary.objects
+            .annotate(date=TruncDate('created_at'))
+            .values('date')
+            .annotate(count=Count('id'))
+            .order_by('-date')
+        )
+        return context
+
+def test_func(self):
+        return self.request.user.is_staff  # ✅ スタッフユーザーのみ許可
 
 class DiaryListView(LoginRequiredMixin, ListView):
     model = Diary
