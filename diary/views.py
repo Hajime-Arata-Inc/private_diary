@@ -15,22 +15,29 @@ class StatsView(LoginRequiredMixin, TemplateView, UserPassesTestMixin):
     template_name = 'diary/stats.html'
 
     def get_context_data(self, **kwargs):
-        from django.db.models.functions import TruncDate
-        from django.db.models import Count
         context = super().get_context_data(**kwargs)
 
-        context['diary_count'] = Diary.objects.count()
-
-        context['daily_counts'] = (
+        daily_counts = (
             Diary.objects
             .annotate(date=TruncDate('created_at'))
             .values('date')
             .annotate(count=Count('id'))
             .order_by('-date')
         )
+
+         # グラフ用データ
+        context['daily_counts'] = daily_counts
+        context['diary_count'] = Diary.objects.count()
+        # ここでNoneが入らないように安全に変換
+        context['dates'] = [
+            item['date'].strftime('%Y-%m-%d') if item['date'] else '不明'
+            for item in daily_counts
+        ]
+        context['counts'] = [item['count'] for item in daily_counts]
+
         return context
 
-def test_func(self):
+    def test_func(self):
         return self.request.user.is_staff  # ✅ スタッフユーザーのみ許可
 
 class DiaryListView(LoginRequiredMixin, ListView):

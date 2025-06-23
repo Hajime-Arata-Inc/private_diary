@@ -14,7 +14,7 @@
     >
 
 </head>
-<body>
+<body style="background-color: #e6f2ff;">
     <header>
         <h1>日記アプリ</h1>
 
@@ -35,9 +35,12 @@
         {% block content %}
         {% endblock %}
 
-        {% if user.is_staff %}
-            <a href="{% url 'stats' %}">分析ページへ</a>
-        {% endif %}
+{% comment %}
+  管理者向けボタンは diary_list.html に移動しました。表示が重複する。
+  {% if user.is_staff %}
+    <a href="/stats/">分析ページへ</a>
+  {% endif %}
+{% endcomment %}
 
 
          <!-- ✅ Bootstrap JS（必要に応じて） -->

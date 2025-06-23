@@ -19,39 +19,66 @@
     </ul>
 
     <h3>📊 日別投稿グラフ</h3>
-    <canvas id="diaryChart" width="400" height="200"></canvas>
+<div class="container p-4 mt-4 rounded" style="background-color: #ffffff;">
+  <canvas id="diaryChart"></canvas>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-    const ctx = document.getElementById('diaryChart');
-    const diaryChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-        labels: [
-            {% for item in daily_counts %}
-            "{{ item.date|date:'Y-m-d' }}"{% if not forloop.last %},{% endif %}
-            {% endfor %}
-        ],
-        datasets: [{
-            label: '投稿数',
-            data: [
-            {% for item in daily_counts %}
-                {{ item.count }}{% if not forloop.last %},{% endif %}
-            {% endfor %}
-            ],
-            backgroundColor: 'rgba(75, 192, 192, 0.5)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-        }]
-        },
-        options: {
-        scales: {
-            y: {
-            beginAtZero: true,
-            ticks: { stepSize: 1 }
-            }
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('diaryChart').getContext('2d');
+const diaryChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: [
+      {% for item in daily_counts %}
+        "{{ item.date|date:'Y-m-d' }}"{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    ],
+    datasets: [{
+      label: '投稿数',
+      data: [
+        {% for item in daily_counts %}
+          {{ item.count }}{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      ],
+      fill: false,
+      borderColor: 'rgba(54, 162, 235, 1)',
+      borderWidth: 2,
+      tension: 0.1,
+
+      pointStyle: 'circle',                   // 塗りつぶし丸
+      pointRadius: 4,
+      pointHoverRadius: 6,
+      pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+      pointBorderColor: '#fff',
+
+      backgroundColor: 'transparent'
+    }]
+  },
+  options: {
+    plugins: {
+      legend: {
+        labels: {
+          usePointStyle: true                 // 凡例を線風に
         }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1
         }
-    });
-    </script>
+      }
+    }
+  }
+});
+</script>
+
+
+<div class="text-center mt-4">
+    <a href="/" class="btn btn-secondary">日記一覧へ戻る</a>
+</div>
+
+
 {% endblock %}
