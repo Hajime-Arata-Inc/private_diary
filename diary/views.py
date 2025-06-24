@@ -25,7 +25,7 @@ class StatsView(LoginRequiredMixin, TemplateView, UserPassesTestMixin):
             .order_by('-date')
         )
 
-         # グラフ用データ
+        # グラフ用データ
         context['daily_counts'] = daily_counts
         context['diary_count'] = Diary.objects.count()
         # ここでNoneが入らないように安全に変換
@@ -67,6 +67,11 @@ class DiaryCreateView(LoginRequiredMixin, CreateView):  # ← Mixinを追加　�
     template_name = 'diary/diary_form.html'
     fields = ['title', 'content']
     success_url = reverse_lazy('diary_list')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
 
 
 class UserLoginView(LoginView):

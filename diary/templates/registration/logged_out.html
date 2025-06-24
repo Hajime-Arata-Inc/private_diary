@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="alert alert-info">
+    ログアウトしました。
+  </div>
+  <a href="{% url 'login' %}" class="btn btn-outline-primary">ログイン画面へ戻る</a>
+{% endblock %}
