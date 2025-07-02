@@ -24,12 +24,11 @@ DATABASES = {
 }
 
 
+LOGIN_URL = '/diary/login/'  # ✅ OK：ログインページのURL
 
-LOGIN_URL = '/login/'  # ← 管理画面ではなく自作ログインを使用
+# LOGOUT_REDIRECT_URL = '/'  ← コメントアウト中（必要なら有効にしてOK）
 
-# ログイン後のリダイレクト先を設定
-#LOGOUT_REDIRECT_URL = '/'
-LOGIN_REDIRECT_URL = 'diary_list'
+LOGIN_REDIRECT_URL = '/diary/diary_list/'  # ← ⚠️ ここだけ微修正がおすすめ
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

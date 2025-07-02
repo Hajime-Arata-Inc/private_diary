@@ -16,9 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
+
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/diary/', permanent=False)),  # トップページをリダイレクト
     path('admin/', admin.site.urls),
-    path('', include('diary.urls')),  # あなたのアプリ
+    path('diary/', include('diary.urls')),  # あなたのアプリ
     path('accounts/', include('django.contrib.auth.urls')),  # これが重要
 ]
