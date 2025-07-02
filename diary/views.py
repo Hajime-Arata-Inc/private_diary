@@ -64,8 +64,8 @@ class DiaryListView(LoginRequiredMixin, ListView):
 
 class DiaryCreateView(LoginRequiredMixin, CreateView):  # ← Mixinを追加　順番が重要
     model = Diary
-    template_name = 'diary/diary_form.html'
     fields = ['title', 'content']
+    template_name = 'diary/diary_form.html'
     success_url = reverse_lazy('diary_list')
 
     def form_valid(self, form):
