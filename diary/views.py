@@ -1,15 +1,22 @@
 # Create your views here.
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic.edit import CreateView
-from django.urls import reverse_lazy
-from .models import Diary
+from django.views.generic import UpdateView, DeleteView
+from django.views.generic import TemplateView
 from django.views.generic import ListView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView
-from django.db.models import Count
 from django.db.models.functions import TruncDate
-from django.views.generic import TemplateView
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db.models import Count
+from django.urls import reverse_lazy
+from .models import Diary
+
+
+
+
+
+
 
 class StatsView(LoginRequiredMixin, TemplateView, UserPassesTestMixin):
     template_name = 'diary/stats.html'
@@ -46,6 +53,12 @@ class DiaryListView(LoginRequiredMixin, ListView):
     context_object_name = 'diary_list'
     ordering = ['-created_at']
 
+#【メモ】現在 DiaryListView に統計処理も含まれているが、分析画面（stats.html）を独立させる際に StatsView に分離予定。
+
+    def get_queryset(self):
+        # 自分が投稿した日記だけを取得
+        return Diary.objects.filter(user=self.request.user)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['diary_count'] = Diary.objects.count()
@@ -81,6 +94,23 @@ class UserLogoutView(LogoutView):
     template_name = 'diary/logged_out.html'  # ログアウト後に表示するテンプレート
 
 
+class DiaryUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Diary
+    fields = ['title', 'content']
+    template_name = 'diary/diary_form.html'  # 投稿と同じテンプレートを再利用
+    success_url = reverse_lazy('diary_list')
+
+    def test_func(self):
+        return self.get_object().user == self.request.user  # 投稿者のみ編集OK
+
+
+class DiaryDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Diary
+    template_name = 'diary/diary_confirm_delete.html'
+    success_url = reverse_lazy('diary_list')
+
+    def test_func(self):
+        return self.get_object().user == self.request.user  # 投稿者のみ削除OK
 
     # CreateView はDjangoの汎用クラスビュー（Generic View）の1つ
     # model = Diary で対象モデルを指定
