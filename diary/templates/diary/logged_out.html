@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="alert alert-info">
+<div class="container py-5 text-center">
+  <div class="alert alert-info mb-4">
     ログアウトしました。
   </div>
   <a href="{% url 'login' %}" class="btn btn-outline-primary">ログイン画面へ戻る</a>
+</div>
 {% endblock %}
