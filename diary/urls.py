@@ -5,6 +5,7 @@ from .views import UserLoginView  # ✅ ここが必要！
 from .views import UserLogoutView  # ✅ 自作ビューを読み込む
 from .views import StatsView
 from .views import DiaryUpdateView, DiaryDeleteView
+from .views import SignUpView  # ← 追加
 
 
 
@@ -16,6 +17,7 @@ urlpatterns = [
     path('stats/', StatsView.as_view(), name='stats'),
     path('diary/<int:pk>/update/', DiaryUpdateView.as_view(), name='diary_update'),
     path('diary/<int:pk>/delete/', DiaryDeleteView.as_view(), name='diary_delete'),
+    path('signup/', SignUpView.as_view(), name='signup'),
 ]
 
 

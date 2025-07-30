@@ -1,12 +1,13 @@
 # Create your views here.
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LogoutView
+from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView
 from django.views.generic import UpdateView, DeleteView
 from django.views.generic import TemplateView
 from django.views.generic import ListView
-from django.contrib.auth.views import LoginView
-from django.contrib.auth.views import LogoutView
 from django.db.models.functions import TruncDate
 from django.db.models import Count
 from django.urls import reverse_lazy
@@ -116,3 +117,12 @@ class DiaryDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     # model = Diary で対象モデルを指定
     # fields でフォームに表示するフィールドを指定
     # template_name で使うテンプレートを明示
+
+class UserLoginView(LoginView):
+    template_name = 'diary/login.html'
+    redirect_authenticated_user = True
+
+class SignUpView(CreateView):
+    template_name = 'diary/signup.html'
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')  # 登録成功後にログイン画面へリダイレクト
