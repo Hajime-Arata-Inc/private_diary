@@ -1,24 +1,21 @@
 # diary/urls.py
+
+# diary/urls.py
 from django.urls import path
-from .views import DiaryListView, DiaryCreateView
-from .views import UserLoginView  # ✅ ここが必要！
-from .views import UserLogoutView  # ✅ 自作ビューを読み込む
-from .views import StatsView
-from .views import DiaryUpdateView, DiaryDeleteView
-from .views import SignUpView  # ← 追加
+from .views import (
+    DiaryListView, DiaryCreateView, DiaryUpdateView, DiaryDeleteView,
+    StatsView, SignUpView,
+)
 
-
+app_name = 'diary'  # ← 必須（namespaced URL で逆引き安定）
 
 urlpatterns = [
-    path('login/', UserLoginView.as_view(), name='login'),
-    path('logout/', UserLogoutView.as_view(), name='logout'),
-    path('', DiaryListView.as_view(), name='diary_list'),
-    path('create/', DiaryCreateView.as_view(), name='diary_create'),
+    path('', DiaryListView.as_view(), name='list'),
+    path('create/', DiaryCreateView.as_view(), name='create'),
     path('stats/', StatsView.as_view(), name='stats'),
-    path('diary/<int:pk>/update/', DiaryUpdateView.as_view(), name='diary_update'),
-    path('diary/<int:pk>/delete/', DiaryDeleteView.as_view(), name='diary_delete'),
+    path('<int:pk>/update/', DiaryUpdateView.as_view(), name='update'),
+    path('<int:pk>/delete/', DiaryDeleteView.as_view(), name='delete'),
+
+    # サインアップ（自作ビューはOK）
     path('signup/', SignUpView.as_view(), name='signup'),
 ]
-
-
-

@@ -14,14 +14,20 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+# config/urls.py
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, reverse_lazy
 from django.views.generic import RedirectView
 
-
 urlpatterns = [
-    path('', RedirectView.as_view(url='/diary/', permanent=False)),  # トップページをリダイレクト
+    # トップはURL名でリダイレクト（ハードコード回避）
+    path('', RedirectView.as_view(url=reverse_lazy('diary:list'), permanent=False)),
+
     path('admin/', admin.site.urls),
-    path('diary/', include('diary.urls')),  # あなたのアプリ
-    path('accounts/', include('django.contrib.auth.urls')),  # これが重要
+
+    # アプリ（diary/urls.py に app_name='diary' が必要）
+    path('diary/', include(('diary.urls', 'diary'), namespace='diary')),
+
+    # 認証は標準ルートに任せる（/accounts/login/ ほか）
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
