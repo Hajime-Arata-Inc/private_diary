@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
+{% block title %}削除確認{% endblock %}
+
 {% block content %}
-<div class="container py-5">
-  <h2>投稿の削除確認</h2>
-  <p>本当にこの投稿を削除してもよいですか？</p>
-  <form method="post">
-    {% csrf_token %}
+<h2 class="mb-3">削除の確認</h2>
+<p>この投稿を本当に削除しますか？</p>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="d-flex gap-2">
     <button type="submit" class="btn btn-danger">削除する</button>
-    <a href="{% url 'diary_list' %}" class="btn btn-secondary">キャンセル</a>
-  </form>
-</div>
+    <a class="btn btn-secondary" href="{% url 'diary:list' %}">キャンセル</a>
+  </div>
+</form>
 {% endblock %}

@@ -1,10 +1,8 @@
 from pathlib import Path
 import os
-from dotenv import load_dotenv
 import environ
 
 # 環境変数の読み込み
-load_dotenv()
 env = environ.Env()
 environ.Env.read_env()
 
@@ -42,21 +40,25 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'diary' / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
+        'DIRS': [BASE_DIR / 'private_diary' / 'templates'],  # ←共通テンプレートを明示
+        'APP_DIRS': True,  # ←各アプリの templates/ も自動で探索
+        'OPTIONS': {'context_processors': [
+            'django.template.context_processors.debug',
+            'django.template.context_processors.request',
+            'django.contrib.auth.context_processors.auth',
+            'django.contrib.messages.context_processors.messages',
+        ]},
     },
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # データベース設定（PostgreSQL）
+# どちらかを使えるように：DATABASE_URL があればそれを優先
+# 例: .env に DATABASE_URL=postgres://USER:PASSWORD@HOST:PORT/NAME
+if env('DATABASE_URL', default=None):
+    DATABASES = {'default': env.db('DATABASE_URL')}
+else:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -77,21 +79,35 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # 認証後のリダイレクト
-LOGIN_URL = '/diary/login/'
-LOGIN_REDIRECT_URL = '/diary/diary_list/'
-# LOGOUT_REDIRECT_URL = '/'  # ← 必要に応じて使用
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'diary:diary_list'
+LOGOUT_REDIRECT_URL = 'diary:login'  # ← 必要に応じて使用
 
 # タイムゾーンと言語
 LANGUAGE_CODE = 'ja'
 TIME_ZONE = 'Asia/Tokyo'
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
 
 # 静的ファイル
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # デフォルトの主キーの型
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# 開発用メールバックエンド：送信せずコンソールに出力
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# サイトのドメイン/プロトコル（リセットURL組み立て用）
+DEFAULT_FROM_EMAIL = "no-reply@example.com"
+
+DEBUG = env.bool('DEBUG', default=True)
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])  # 例: ['your-domain.com', 'localhost']
+
+# 例： https を使う本番サイト
+# CSRF_TRUSTED_ORIGINS = ['https://your-domain.com']
+
+
+
 
 
