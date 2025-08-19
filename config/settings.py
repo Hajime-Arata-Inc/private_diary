@@ -59,7 +59,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 if env('DATABASE_URL', default=None):
     DATABASES = {'default': env.db('DATABASE_URL')}
 else:
-DATABASES = {
+    DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': env('DB_NAME'),
