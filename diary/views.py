@@ -1,88 +1,108 @@
-# Create your views here.
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
-from .models import Diary
-from django.views.generic import ListView
-from django.contrib.auth.views import LoginView
-from django.contrib.auth.views import LogoutView
-from django.db.models import Count
 from django.db.models.functions import TruncDate
-from django.views.generic import TemplateView
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db.models import Count
+from .models import Diary
+from django.contrib import messages
 
-class StatsView(LoginRequiredMixin, TemplateView, UserPassesTestMixin):
+
+
+
+
+class StatsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = 'diary/stats.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        # 自分の投稿のみ日次集計
         daily_counts = (
-            Diary.objects
+            Diary.objects.filter(user=self.request.user)
             .annotate(date=TruncDate('created_at'))
             .values('date')
             .annotate(count=Count('id'))
             .order_by('-date')
         )
 
-        # グラフ用データ
         context['daily_counts'] = daily_counts
-        context['diary_count'] = Diary.objects.count()
-        # ここでNoneが入らないように安全に変換
+        context['diary_count'] = Diary.objects.filter(user=self.request.user).count()
         context['dates'] = [
             item['date'].strftime('%Y-%m-%d') if item['date'] else '不明'
             for item in daily_counts
         ]
         context['counts'] = [item['count'] for item in daily_counts]
-
         return context
 
     def test_func(self):
-        return self.request.user.is_staff  # ✅ スタッフユーザーのみ許可
+        # スタッフのみアクセス許可（要件に応じて変更可）
+        return self.request.user.is_staff
+
 
 class DiaryListView(LoginRequiredMixin, ListView):
     model = Diary
     template_name = 'diary/diary_list.html'
     context_object_name = 'diary_list'
     ordering = ['-created_at']
+    paginate_by = 10    
+
+    def get_queryset(self):
+        # 自分が投稿した日記だけ
+        return Diary.objects.filter(user=self.request.user).order_by('-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['diary_count'] = Diary.objects.count()
-
-        # 🔽 日別件数を集計（TruncDateで日付単位に切り落とし）
+        qs = Diary.objects.filter(user=self.request.user)
+        context['diary_count'] = qs.count()
         context['daily_counts'] = (
-            Diary.objects
-            .annotate(date=TruncDate('created_at'))
+            qs.annotate(date=TruncDate('created_at'))
             .values('date')
             .annotate(count=Count('id'))
             .order_by('-date')
         )
-
+        # グラフ用（必要なければ省略可）
+        context['dates']  = [d['date'].strftime('%Y-%m-%d') for d in context['daily_counts']]
+        context['counts'] = [d['count'] for d in context['daily_counts']]
         return context
 
 
-class DiaryCreateView(LoginRequiredMixin, CreateView):  # ← Mixinを追加　順番が重要
+class DiaryCreateView(LoginRequiredMixin, CreateView):
     model = Diary
-    template_name = 'diary/diary_form.html'
     fields = ['title', 'content']
-    success_url = reverse_lazy('diary_list')
+    template_name = 'diary/diary_form.html'
+    success_url = reverse_lazy('diary:list')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        # 例: CreateViewのform_valid内で
+        messages.success(self.request, "保存しました")
         return super().form_valid(form)
 
 
+class DiaryUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Diary
+    fields = ['title', 'content']
+    template_name = 'diary/diary_form.html'
+    success_url = reverse_lazy('diary:list')
 
-class UserLoginView(LoginView):
-    template_name = 'diary/login.html'
-
-class UserLogoutView(LogoutView):
-    template_name = 'diary/logged_out.html'  # ログアウト後に表示するテンプレート
+    def test_func(self):
+        return self.get_object().user == self.request.user
 
 
+class DiaryDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Diary
+    template_name = 'diary/diary_confirm_delete.html'
+    success_url = reverse_lazy('diary:list')
 
-    # CreateView はDjangoの汎用クラスビュー（Generic View）の1つ
-    # model = Diary で対象モデルを指定
-    # fields でフォームに表示するフィールドを指定
-    # template_name で使うテンプレートを明示
+    def test_func(self):
+        return self.get_object().user == self.request.user
+
+
+class SignUpView(CreateView):
+    template_name = 'diary/signup.html'
+    form_class = UserCreationForm
+    # 標準認証（/accounts/login/）にリダイレクト
+    success_url = reverse_lazy('login')
+

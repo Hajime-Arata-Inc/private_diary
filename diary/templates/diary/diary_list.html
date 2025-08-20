@@ -1,104 +1,29 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% block title %}日記一覧{% endblock %}
 
 {% block content %}
-  <h2 class="mb-4">日記一覧</h2>
-  <p class="text-muted">全 {{ diary_count }} 件の投稿があります。</p>
-  {% if object_list %}
-    <div class="row row-cols-1 row-cols-md-2 g-4">
-      {% for diary in object_list %}
-        <div class="col">
-          <div class="card shadow-sm h-100">
-            <div class="card-body">
-              <h5 class="card-title">{{ diary.title }}</h5>
-              <p class="card-text text-muted">
-                {{ diary.created_at|date:"Y年m月d日 H:i" }}
-              </p>
-              <p class="card-text">{{ diary.content|truncatechars:120 }}</p>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    <div class="alert alert-info">まだ日記が投稿されていません。</div>
-  {% endif %}
-
-  <div class="mt-4 text-end">
-    <a href="{% url 'diary_create' %}" class="btn btn-success">＋ 日記を投稿する</a>
-  </div>
-
-  <h3 class="mt-5">📊 日別投稿グラフ</h3>
-  <div class="container p-4 mt-4 rounded" style="background-color: #ffffff;">
-    <canvas id="diaryChart" width="400" height="200"></canvas>
-  </div>
-
-<script>
-  const ctx = document.getElementById('diaryChart');
-
-  const diaryChart = new Chart(ctx, {
-    type: 'line',  // 'line' に変えると折れ線グラフにもできる
-    data: {
-      labels: [
-        {% for item in daily_counts %}
-          "{{ item.date|date:'Y-m-d' }}"{% if not forloop.last %},{% endif %}
-        {% endfor %}
-      ],
-datasets: [{
-  label: '投稿数',
-  data: [
-    {% for item in daily_counts %}
-      {{ item.count }}{% if not forloop.last %},{% endif %}
-    {% endfor %}
-  ],
-  fill: false,
-  borderColor: 'rgba(54, 162, 235, 1)',
-  borderWidth: 2,
-  tension: 0.1,
-
-  // ✅ 丸い点（塗りつぶしあり）
-  pointStyle: 'circle',
-  pointRadius: 4,
-  pointHoverRadius: 6,
-  pointBackgroundColor: 'rgba(54, 162, 235, 1)',  // ← 塗りつぶし色
-  pointBorderColor: '#fff',                      // 外枠（白で囲む）
-
-  // ✅ 凡例マークを「線」にする
-  segment: {
-    borderDash: [],  // 実線
-  },
-  showLine: true,
-  backgroundColor: 'transparent'
-}]
-
-
-    },
-    options: {
-      plugins: {
-      legend: {
-        labels: {
-          usePointStyle: true
-        }
-      }
-    },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            stepSize: 1
-          }
-        }
-      }
-    }
-  });
-</script>
-
-{% if user.is_staff %}
-<div class="text-center mt-4">
-  <a href="/stats/" class="btn btn-dark btn-lg" style="background-color: #343a40; border-color: #343a40;">
-    📊 分析ページへ
-  </a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="mb-0">日記一覧</h2>
+  <a class="btn btn-primary" href="{% url 'diary:create' %}">新規投稿</a>
 </div>
 
-{% endif %}
+<p class="text-muted">総件数：{{ diary_count }} 件</p>
 
+{% if diary_list %}
+  <div class="list-group">
+    {% for diary in diary_list %}
+      <div class="list-group-item">
+        <h5 class="mb-1">{{ diary.title }}</h5>
+        <small class="text-muted">{{ diary.created_at|date:"Y-m-d H:i" }}</small>
+        <p class="mb-2">{{ diary.content|linebreaksbr }}</p>
+        <div class="d-flex gap-2">
+          <a class="btn btn-sm btn-outline-secondary" href="{% url 'diary:update' diary.pk %}">編集</a>
+          <a class="btn btn-sm btn-outline-danger" href="{% url 'diary:delete' diary.pk %}">削除</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>まだ投稿がありません。</p>
+{% endif %}
 {% endblock %}
