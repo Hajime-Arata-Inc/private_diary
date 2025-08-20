@@ -1,11 +1,15 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm
-from django.views.generic import TemplateView, ListView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 from django.db.models.functions import TruncDate
 from django.db.models import Count
-from django.urls import reverse_lazy
 from .models import Diary
+from django.contrib import messages
+
+
+
 
 
 class StatsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
@@ -42,6 +46,7 @@ class DiaryListView(LoginRequiredMixin, ListView):
     template_name = 'diary/diary_list.html'
     context_object_name = 'diary_list'
     ordering = ['-created_at']
+    paginate_by = 10    
 
     def get_queryset(self):
         # 自分が投稿した日記だけ
@@ -49,16 +54,17 @@ class DiaryListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # 自分の投稿数に限定
-        context['diary_count'] = Diary.objects.filter(user=self.request.user).count()
-        # （必要なら）自分の投稿のみ日次集計
+        qs = Diary.objects.filter(user=self.request.user)
+        context['diary_count'] = qs.count()
         context['daily_counts'] = (
-            Diary.objects.filter(user=self.request.user)
-            .annotate(date=TruncDate('created_at'))
+            qs.annotate(date=TruncDate('created_at'))
             .values('date')
             .annotate(count=Count('id'))
             .order_by('-date')
         )
+        # グラフ用（必要なければ省略可）
+        context['dates']  = [d['date'].strftime('%Y-%m-%d') for d in context['daily_counts']]
+        context['counts'] = [d['count'] for d in context['daily_counts']]
         return context
 
 
@@ -70,6 +76,8 @@ class DiaryCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        # 例: CreateViewのform_valid内で
+        messages.success(self.request, "保存しました")
         return super().form_valid(form)
 
 
@@ -97,3 +105,4 @@ class SignUpView(CreateView):
     form_class = UserCreationForm
     # 標準認証（/accounts/login/）にリダイレクト
     success_url = reverse_lazy('login')
+
