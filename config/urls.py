@@ -21,13 +21,10 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     # トップはURL名でリダイレクト（ハードコード回避）
-    path('', RedirectView.as_view(url=reverse_lazy('diary:list'), permanent=False)),
-
+    path('', RedirectView.as_view(url='/diary/', permanent=False)),
     path('admin/', admin.site.urls),
-
     # アプリ（diary/urls.py に app_name='diary' が必要）
     path('diary/', include(('diary.urls', 'diary'), namespace='diary')),
-
     # 認証は標準ルートに任せる（/accounts/login/ ほか）
     path('accounts/', include('django.contrib.auth.urls')),
 ]

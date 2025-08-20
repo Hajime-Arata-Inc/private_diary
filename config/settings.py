@@ -80,8 +80,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # 認証後のリダイレクト
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'diary:diary_list'
-LOGOUT_REDIRECT_URL = 'diary:login'  # ← 必要に応じて使用
+LOGIN_REDIRECT_URL = 'diary:list'
+LOGOUT_REDIRECT_URL = 'login'  # ← 必要に応じて使用
 
 # タイムゾーンと言語
 LANGUAGE_CODE = 'ja'
@@ -91,6 +91,8 @@ USE_TZ = True
 
 # 静的ファイル
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'private_diary' / 'static']
+# 本番: STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # デフォルトの主キーの型
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
