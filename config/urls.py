@@ -27,4 +27,5 @@ urlpatterns = [
     path('diary/', include(('diary.urls', 'diary'), namespace='diary')),
     # 認証は標準ルートに任せる（/accounts/login/ ほか）
     path('accounts/', include('django.contrib.auth.urls')),
+    path('tasks/', include('tasks.urls')),
 ]

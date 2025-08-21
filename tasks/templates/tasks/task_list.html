@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card-soft p-4">
+    <h2 class="section-title">やることリスト</h2>
+
+    <form method="post" class="d-flex gap-2 mb-3">
+    {% csrf_token %}
+    <!-- 任意：required を付けたい場合（add_attr フィルタが無ければテンプレートで直書きでも可） -->
+    <input type="text" name="title" class="form-control" placeholder="やることを入力…" required>
+    <button type="submit" class="btn btn-primary">追加</button>
+    </form>
+
+    {% if tasks %}
+    <ul class="list-group">
+    {% for t in tasks %}
+        <li class="list-group-item d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+            <form method="post" action="{% url 'tasks:toggle' t.pk %}">
+                {% csrf_token %}
+                    <button class="btn btn-sm {% if t.is_done %}btn-success{% else %}btn-outline-secondary{% endif %}">
+                {% if t.is_done %}完了{% else %}未完{% endif %}
+                    </button>
+            </form>
+            <span {% if t.is_done %}style="text-decoration: line-through; color: var(--muted);" {% endif %}>
+                {{ t.title }}
+            </span>
+            </div>
+            <form method="post" action="{% url 'tasks:delete' t.pk %}">
+                {% csrf_token %}
+                <button class="btn btn-sm btn-outline-danger">削除</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="text-muted mb-0">まだ登録はありません。</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+:root{
+    --bg:#f7f7fb;
+    --surface:#ffffff;
+    --text:#333;
+    --muted:#6b7280; /* 説明文など */
+    --primary:#6aa2ff;     /* 優しい青 */
+    --primary-600:#4e86eb; /* ホバー */
+    --accent:#ffd88a;      /* ワンポイント */
+    --radius:14px;
+    --shadow:0 6px 18px rgba(0,0,0,.06);
+}
+
+/* ベース */
+body{ background:var(--bg); color:var(--text); }
+
+/* カード */
+.card-soft{
+    background:var(--surface);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    border:0;
+}
+
+/* 見出しの余白 */
+.section-title{ margin: 0 0 1rem; }
+
+/* ボタン（Bootstrapに寄せてアクセント） */
+.btn-primary{
+    background:var(--primary);
+    border:0;
+}
+.btn-primary:hover{ background:var(--primary-600); }
