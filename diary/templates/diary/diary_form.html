@@ -1,15 +1,22 @@
 {% extends 'base.html' %}
-{% block title %}日記の投稿{% endblock %}
+{% load static %}   <!-- ★これを追加 -->
+
+{% block title %}日記を作成{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'diary/theme-create.css' %}">
+{% endblock %}
 
 {% block content %}
-<h2 class="mb-3">日記の投稿・編集</h2>
-
-<form method="post" novalidate>
-  {% csrf_token %}
-  {{ form.as_p }}
-  <div class="d-flex gap-2">
-    <button type="submit" class="btn btn-primary">保存</button>
-    <a class="btn btn-secondary" href="{% url 'diary:list' %}">一覧へ戻る</a>
-  </div>
-</form>
+<div class="container py-4">
+  <h2 class="mb-3">新しい日記</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">保存する</button>
+  </form>
+</div>
+{% endblock %}
+{% block extra_script %}
+<script src="{% static 'diary/js/form-helpers.js' %}"></script>
 {% endblock %}

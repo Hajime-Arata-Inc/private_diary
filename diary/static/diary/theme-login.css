@@ -1,0 +1,5 @@
+/* 柔らかい配色・丸み */
+body { background: #f5f7ff; font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif; }
+.card { background: #ffffff; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,.06); }
+.btn-primary { background: #5b7cff; border: none; }
+h2 { color: #4053b8; }
