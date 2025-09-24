@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'diary',
+    'tasks',
 ]
 
 MIDDLEWARE = [
@@ -81,7 +82,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # 認証後のリダイレクト
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'diary:list'
-LOGOUT_REDIRECT_URL = 'login'  # ← 必要に応じて使用
+#LOGOUT_REDIRECT_URL = 'login'  # ← 必要に応じて使用
 
 # タイムゾーンと言語
 LANGUAGE_CODE = 'ja'

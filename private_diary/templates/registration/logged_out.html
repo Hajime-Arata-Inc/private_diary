@@ -1,7 +1,19 @@
 {% extends 'base.html' %}
+{% load static %}   <!-- ★これを追加 -->
+
 {% block title %}ログアウトしました{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'diary/theme-logout.css' %}">
+{% endblock %}
+
 {% block content %}
-<h2 class="mb-3">ログアウトしました</h2>
-<p><a href="{% url 'login' %}">ログイン画面へ戻る</a></p>
+<div class="container py-5 text-center">
+  <h2 class="mb-3">ログアウトしました</h2>
+  <p><a href="{% url 'login' %}" class="btn btn-outline-secondary">ログイン画面へ</a></p>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script src="{% static 'diary/js/page-fade.js' %}"></script>
 {% endblock %}
