@@ -1,7 +1,9 @@
-# 📓 Private Diary
+# Private Diary
+[![CodeQL](https://github.com/Hajime-Arata-Inc/private_diary/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Hajime-Arata-Inc/private_diary/actions/workflows/codeql-analysis.yml)
+
 - Djangoを学習しながら開発している「日記アプリ」です。ユーザー認証、投稿機能、データベース連携など、Webアプリ開発の基本要素を実践的に習得することを目的としています。
 ---
-## 🚀 主な機能
+## 主な機能
 
 - ユーザー認証（サインアップ / ログイン / ログアウト）
 - 日記の投稿・編集・削除・一覧表示
@@ -9,7 +11,7 @@
 - PostgreSQL対応（開発ではSQLiteでも利用可能）
 - Django管理画面でのデータ管理
 ---
-## 🛠️ 技術スタック
+## 技術スタック
 - **バックエンド**: Django (Python 3.12)
 - **データベース**: PostgreSQL（学習用途ではSQLiteも可）
 - **フロントエンド**: HTML, CSS, Bootstrap
@@ -17,7 +19,7 @@
 
 ---
 
-## 📂 ディレクトリ構成
+## ディレクトリ構成
 ```
 private_diary/
 ├── config/ # プロジェクト設定
@@ -30,7 +32,7 @@ private_diary/
 ```
 ---
 
-## ⚙️ セットアップ手順
+## セットアップ手順
 
 ### 1. リポジトリをクローン
 ```bash
@@ -61,7 +63,7 @@ DATABASE_URL=postgres://user:password@localhost:5432/private_diary
 - [ ] UI改善（Bootstrap適用）
 - [ ] 分析機能（投稿件数や傾向の可視化）
 - [ ] AWSやRenderを使ったデプロイ
-### 📸 スクリーンショット
+### スクリーンショット
 （今後、アプリ画面のスクリーンショットを追加予定）
 ### コントリビュート
 - このプロジェクトは学習目的で作成しています。改善提案やアドバイスは Issue / Pull Request にて歓迎します。
