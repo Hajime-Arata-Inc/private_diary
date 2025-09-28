@@ -69,3 +69,4 @@ DATABASE_URL=postgres://user:password@localhost:5432/private_diary
 - このリポジトリは MIT License で公開しています。
 - 詳細は LICENSE をご確認ください。
 
+- CodeQL gate test
