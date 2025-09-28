@@ -58,7 +58,7 @@ DATABASE_URL=postgres://user:password@localhost:5432/private_diary
 ### 今後のロードマップ
 - [x] 日記のCRUD機能
 - [x] ユーザー認証
-- [ ] UI改善（Bootstrap適用）
+- [x] UI改善（Bootstrap適用）
 - [ ] 分析機能（投稿件数や傾向の可視化）
 - [ ] AWSやRenderを使ったデプロイ
 ### 📸 スクリーンショット
@@ -66,7 +66,6 @@ DATABASE_URL=postgres://user:password@localhost:5432/private_diary
 ### コントリビュート
 - このプロジェクトは学習目的で作成しています。改善提案やアドバイスは Issue / Pull Request にて歓迎します。
 ### ライセンス
-- このリポジトリは MIT License で公開しています。
 - 詳細は LICENSE をご確認ください。
 
 - CodeQL gate test
